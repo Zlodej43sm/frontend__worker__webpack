@@ -1,0 +1,19 @@
+{
+  "name": "frontend_worker_webpack",
+  "version": "1.0.0",
+  "description": "Frontend worker. Build & watch frontend files webpack/babel/stylus/postCss",
+  "main": "webpack.config.js",
+  "devDependencies": {
+    "webpack": "^3.6.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alec Povolotskiy <a.povolotskiy@gmail.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/Zlodej43sm/frontend__worker__webpack",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zlodej43sm/frontend__worker__webpack.git"
+  }
+}
