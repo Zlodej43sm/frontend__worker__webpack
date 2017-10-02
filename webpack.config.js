@@ -1,12 +1,11 @@
 const NODE_ENV = process.env.NODE_ENV || 'development',
-    PROJECT_PATH = './fe_stylus',
+    PROJECT_PATH = './example',
     STYLES_SRC = `${PROJECT_PATH}/css/stylus`,
     STYLES_DEST = `${PROJECT_PATH}/css/compiled`,
     SCRIPTS_SRC = `${PROJECT_PATH}/js/source`,
     SCRIPTS_DEST = `${PROJECT_PATH}/js/compiled`;
 
-let path = require('path'),
-    webpack = require('webpack'),
+let webpack = require('webpack'),
     config = {
         entry: `${SCRIPTS_SRC}/Masonry.js`,
         output: {
@@ -17,19 +16,17 @@ let path = require('path'),
         watchOptions: {
             aggregateTimeout: 100
         },
-        devtool: NODE_ENV === 'development' ? "cheap-inline-module-source-map" : null,
+        devtool: NODE_ENV === 'development' ? "cheap-inline-module-source-map" : "nosources-source-map",
         plugins: [
             new webpack.DefinePlugin({
-                NODE_ENV: JSON.stringify(NODE_ENV),
-                USER: JSON.stringify(process.env.USER)
+                NODE_ENV: JSON.stringify(NODE_ENV)
             })
         ],
         module: {
             rules: [
                 {
                     test: /\.js$/,
-
-                    exclude: /(node_modules|bower_components)/,
+                    exclude: /(node_modules)/,
                     loader: 'babel-loader'
                 }
             ]
@@ -37,3 +34,17 @@ let path = require('path'),
     };
 
 module.exports = config;
+
+if (NODE_ENV === 'production') {
+    module.exports.plugins.push(
+        new webpack.optimize.UglifyJsPlugin(
+            {
+                compress: {
+                    warnings: false,
+                    drop_console: true,
+                    unsafe: true
+                }
+            }
+        )
+    );
+}

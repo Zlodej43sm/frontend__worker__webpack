@@ -11,8 +11,7 @@ export default class Masonry {
      */
     constructor(grid, cols, res) {
         if (NODE_ENV === 'development') {
-            debugger;
-            console.log(USER);
+            console.log(NODE_DATA);
         }
 
         this.grid = document.querySelector(grid);
