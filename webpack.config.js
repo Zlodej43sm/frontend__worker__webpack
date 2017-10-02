@@ -1,15 +1,15 @@
-const NODE_ENV = process.env.NODE_ENV || 'development',
-    PROJECT_PATH = './example',
-    STYLES_SRC = `${PROJECT_PATH}/css/stylus`,
-    STYLES_DEST = `${PROJECT_PATH}/css/compiled`,
-    SCRIPTS_SRC = `${PROJECT_PATH}/js/source`,
-    SCRIPTS_DEST = `${PROJECT_PATH}/js/compiled`;
+const PROJECT_PATH = './example',
+    STYLES_SRC = '/css/stylus',
+    STYLES_DEST = '/css/compiled',
+    SCRIPTS_SRC = '/js/source',
+    SCRIPTS_DEST = '/js/compiled',
+    NODE_ENV = process.env.NODE_ENV || 'development';
 
 let webpack = require('webpack'),
     config = {
-        entry: `${SCRIPTS_SRC}/Masonry.js`,
+        entry: `${PROJECT_PATH}${SCRIPTS_SRC}/Masonry.js`,
         output: {
-            filename: `${SCRIPTS_DEST}/Masonry.js`,
+            filename: `${PROJECT_PATH}${SCRIPTS_DEST}/Masonry.js`,
             library: "Masonry"
         },
         watch: NODE_ENV === 'development',
@@ -33,10 +33,8 @@ let webpack = require('webpack'),
         }
     };
 
-module.exports = config;
-
 if (NODE_ENV === 'production') {
-    module.exports.plugins.push(
+    config.plugins.push(
         new webpack.optimize.UglifyJsPlugin(
             {
                 compress: {
@@ -48,3 +46,5 @@ if (NODE_ENV === 'production') {
         )
     );
 }
+
+module.exports = config;
