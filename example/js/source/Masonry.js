@@ -10,10 +10,6 @@ export default class Masonry {
      * @param res {object} - screen resolution setup
      */
     constructor(grid, cols, res) {
-        if (NODE_ENV === 'development') {
-            console.log(NODE_DATA);
-        }
-
         this.grid = document.querySelector(grid);
         this.gridItems = Array.prototype.slice.call(this.grid.children);
         this.cols = cols;
@@ -152,4 +148,4 @@ function _getTop(i, c) {
     return elTop;
 }
 
-exports.init = Masonry;
+module.exports = Masonry;

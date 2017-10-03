@@ -1,27 +1,28 @@
-const PROJECT_PATH = './example',
-    STYLES_SRC = '/css/stylus',
-    STYLES_DEST = '/css/compiled',
-    SCRIPTS_SRC = '/js/source',
+const path = require('path'),
+    PROJECT_PATH = path.join(__dirname, '/example'),
+    STYLES_SRC = './css/stylus',
+    STYLES_DEST = './css/compiled',
+    SCRIPTS_SRC = './js/source',
     SCRIPTS_DEST = '/js/compiled',
     NODE_ENV = process.env.NODE_ENV || 'development';
 
 let webpack = require('webpack'),
     config = {
-        entry: `${PROJECT_PATH}${SCRIPTS_SRC}/Masonry.js`,
-        output: {
-            filename: `${PROJECT_PATH}${SCRIPTS_DEST}/Masonry.js`,
-            library: "Masonry"
+        context: PROJECT_PATH,
+        entry: {
+            Masonry: `${SCRIPTS_SRC}/Masonry`
         },
-        watch: NODE_ENV === 'development',
+        output: {
+            path: PROJECT_PATH + SCRIPTS_DEST,
+            filename: "[name].js",
+            library: "[name]"
+        },
+        // watch: NODE_ENV === 'development',
         watchOptions: {
             aggregateTimeout: 100
         },
         devtool: NODE_ENV === 'development' ? "cheap-inline-module-source-map" : "nosources-source-map",
-        plugins: [
-            new webpack.DefinePlugin({
-                NODE_ENV: JSON.stringify(NODE_ENV)
-            })
-        ],
+        plugins: [],
         module: {
             rules: [
                 {
@@ -32,6 +33,17 @@ let webpack = require('webpack'),
             ]
         }
     };
+
+config.plugins.push(
+    new webpack.DefinePlugin({
+        NODE_ENV: JSON.stringify(NODE_ENV)
+    }),
+    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+        name: 'common',
+        minChunks: 3
+    })
+);
 
 if (NODE_ENV === 'production') {
     config.plugins.push(
