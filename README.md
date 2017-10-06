@@ -7,13 +7,11 @@ npm install
 ```
 
 #### Theme setup
-Set you frontend path source & destination (webpack.config.js).
+Set you frontend path project & destination (webpack.config.js).
 Example:
 ```javascript
-const STYLES_SRC = path.join(__dirname, 'YOUR_STYLES_SOURCE'),
-    STYLES_DEST = path.join(__dirname,'YOUR_STYLES_COMPILED'),
-    SCRIPTS_SRC = path.join(__dirname,'YOUR_SCRIPTS_SOURCE'),
-    SCRIPTS_DEST = path.join(__dirname,'YOUR_SCRIPTS_COMPILED');
+const PROJECT_PATH = path.resolve(__dirname, 'example'),
+DEST = '/compiled';
 ```
 
 #### Tasks
