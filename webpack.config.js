@@ -1,19 +1,21 @@
-const path = require('path'),
-    PROJECT_PATH = path.resolve(__dirname, 'example'),
+const webpack = require('webpack'),
+    path = require('path'),
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
+    CleanWebpackPlugin = require('clean-webpack-plugin'),
+    PROJECT_PATH = path.join(__dirname, 'example'),
     DEST = '/compiled',
     NODE_ENV = process.env.NODE_ENV || 'development';
 
-let webpack = require('webpack'),
-    ExtractTextPlugin = require('extract-text-webpack-plugin'),
+let pathsToClean = PROJECT_PATH + DEST,
     config = {
         context: PROJECT_PATH,
         entry: {
             Masonry: './masonry',
-            style: './masonry/widget__masonry'
+            styles: './styles/stylus'
         },
         output: {
-            path: path.join(PROJECT_PATH, DEST),
-            filename: "[name].js",
+            path: PROJECT_PATH + DEST,
+            filename: "js/[name].js",
             library: "[name]"
         },
         resolve: {
@@ -46,7 +48,26 @@ config.module.rules.push(
         test: /\.styl$/,
         loader: ExtractTextPlugin.extract({
             fallback: 'style-loader',
-            use: ['css-loader', 'stylus-loader']
+            use: [
+                {
+                    loader: 'css-loader',
+                    options: {
+                        sourceMap: NODE_ENV === 'development'
+                    }
+                },
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        sourceMap: NODE_ENV === 'development'
+                    }
+                },
+                {
+                    loader: 'stylus-loader',
+                    options: {
+                        sourceMap: NODE_ENV === 'development'
+                    }
+                }
+            ]
         })
     },
     {
@@ -70,7 +91,8 @@ config.module.rules.push(
 );
 
 config.plugins.push(
-    new ExtractTextPlugin('[name].css', {allChunks: true}),
+    new ExtractTextPlugin('css/[name].css'),
+    new CleanWebpackPlugin(pathsToClean),
     new webpack.DefinePlugin({
         NODE_ENV: JSON.stringify(NODE_ENV)
     }),
