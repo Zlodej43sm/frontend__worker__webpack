@@ -1,27 +1,31 @@
 const webpack = require('webpack'),
     path = require('path'),
+    ImageminPlugin = require('imagemin-webpack-plugin').default,
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
     CleanWebpackPlugin = require('clean-webpack-plugin'),
-    PROJECT_PATH = path.join(__dirname, 'example'),
-    DEST = '/compiled',
+    PROJECT_PATH = path.join(__dirname),
+    DEST = '/public/compiled',
     NODE_ENV = process.env.NODE_ENV || 'development';
 
 let pathsToClean = PROJECT_PATH + DEST,
     config = {
         context: PROJECT_PATH,
         entry: {
-            Masonry: './masonry',
-            styles: './styles/stylus'
+            bundle: './js',
+            styles: './stylus'
         },
         output: {
             path: PROJECT_PATH + DEST,
-            filename: "js/[name].js",
+            filename: 'js/[name].js',
             library: "[name]"
         },
         resolve: {
-            extensions: ['.js', '.styl', '.css']
+            extensions: ['.js', '.styl', '.css'],
+            alias: {
+                jquery: `${PROJECT_PATH}/node_modules/jquery/dist/jquery.js`
+            }
         },
-        // watch: NODE_ENV === 'development',
+        watch: NODE_ENV === 'development',
         watchOptions: {
             aggregateTimeout: 100
         },
@@ -45,13 +49,14 @@ config.module.rules.push(
         loader: 'jade'
     },
     {
-        test: /\.styl$/,
+        test: /\.(styl|css)$/,
         loader: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: [
                 {
                     loader: 'css-loader',
                     options: {
+                        ignore: '/node_modules/',
                         sourceMap: NODE_ENV === 'development'
                     }
                 },
@@ -64,7 +69,11 @@ config.module.rules.push(
                 {
                     loader: 'stylus-loader',
                     options: {
-                        sourceMap: NODE_ENV === 'development'
+                        ignore: '/node_modules/',
+                        sourceMap: NODE_ENV === 'development',
+                        use: [
+                            require('nib')()
+                        ]
                     }
                 }
             ]
@@ -74,15 +83,12 @@ config.module.rules.push(
         test: /\.(png|jpg|svg|ttf|eot|woff|woff2)$/,
         use: [
             {
-                loader: 'file-loader',
+                loader: 'url-loader',
                 options: {
-                    name (file) {
-                        if (NODE_ENV === 'development') {
-                            return '[path][name].[ext]'
-                        }
-
-                        return '[hash].[ext]'
-                    }
+                    ignore: '/node_modules/',
+                    limit: 10000,
+                    publicPath: '..',
+                    name: `/[path]${NODE_ENV === 'development' ? '[name]' : '[hash]'}.[ext]`
                 }
             }
         ]
@@ -91,16 +97,26 @@ config.module.rules.push(
 );
 
 config.plugins.push(
-    new ExtractTextPlugin('css/[name].css'),
-    new CleanWebpackPlugin(pathsToClean),
     new webpack.DefinePlugin({
         NODE_ENV: JSON.stringify(NODE_ENV)
     }),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
-        name: 'common',
-        minChunks: 3
-    })
+    new webpack.ProvidePlugin({
+        '$': 'jquery',
+        'jQuery': 'jquery',
+    }),
+    // new ImageminPlugin({
+    //     test: `${PROJECT_PATH}/i/**`,
+    //     jpegtran: {
+    //         progressive: true
+    //     }
+    // }),
+    new ExtractTextPlugin('css/[name].css'),
+    new CleanWebpackPlugin(pathsToClean),
+    new webpack.NoEmitOnErrorsPlugin()
+    // new webpack.optimize.CommonsChunkPlugin({
+    //     name: 'common',
+    //     minChunks: 3
+    // })
 );
 
 if (NODE_ENV === 'production') {
