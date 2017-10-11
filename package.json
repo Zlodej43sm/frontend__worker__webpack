@@ -1,0 +1,43 @@
+{
+  "name": "frontend_worker_webpack",
+  "version": "1.0.0",
+  "description": "Frontend worker. Build & watch frontend files webpack/babel/stylus/postCss",
+  "main": "webpack.config.js",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "clean-webpack-plugin": "^0.1.17",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.1",
+    "file-loader": "^1.1.5",
+    "font-awesome": "^4.7.0",
+    "font-awesome-stylus": "^4.7.1",
+    "imagemin-webpack-plugin": "^1.5.2",
+    "jquery": "^3.2.1",
+    "nib": "^1.1.2",
+    "postcss-cssnext": "^3.0.2",
+    "postcss-import": "^11.0.0",
+    "postcss-loader": "^2.0.6",
+    "style-loader": "^0.19.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.6.0"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development webpack --progress",
+    "build": "NODE_ENV=production webpack --progress"
+  },
+  "author": "Alec Povolotskiy <a.povolotskiy@gmail.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/Zlodej43sm/frontend__worker__webpack",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zlodej43sm/frontend__worker__webpack.git"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0"
+  }
+}
